@@ -1,0 +1,14 @@
+
+from django.urls import path, include
+
+from destination.views import index, destination_list, destination_detail, redirect_home
+
+app_name = 'destination'
+urlpatterns = [
+    path('', index, name='index'),
+    path('redirect_home/', redirect_home, name='redirect_home'),
+    path('destinations/', include([
+        path('', destination_list, name='list'),
+        path('details/<slug:slug>', destination_detail, name='detail'),
+    ]))
+]
