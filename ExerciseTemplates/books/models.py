@@ -1,0 +1,32 @@
+from django.db import models
+from django.template.defaultfilters import slugify
+
+from common.models import TimeStampModel
+
+
+class Book(TimeStampModel):
+
+    class GenreChoices(models.TextChoices):
+        FICTION = 'Fiction', 'Fiction'
+        NONFICTION = 'Non-Fiction', 'Non-Fiction'
+        FANTASY = 'Fantasy', 'Fantasy'
+        SCIENCE = 'Science', 'Science'
+        HISTORY = 'History', 'History'
+        MYSTERY = 'Mystery', 'Mystery'
+
+    title = models.CharField(max_length=100, unique=True)
+    price = models.DecimalField(max_digits=6, decimal_places=2)
+    isbn = models.CharField(max_length=12,  unique=True)
+    genre = models.CharField(max_length=50, choices=GenreChoices.choices)
+    publishing_date = models.DateField()
+    description = models.TextField()
+    image_url = models.URLField()
+    slug = models.SlugField(unique=True, blank=True)
+    pages = models.PositiveIntegerField(null=True, blank=True)
+    publisher = models.CharField(max_length=100)
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(f"{self.title}-{self.publisher}")
+        super().save(*args, **kwargs)
+

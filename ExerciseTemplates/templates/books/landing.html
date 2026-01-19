@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+
+    <div class="p-5 mb-4 bg-light rounded-3">
+        <div class="container-fluid py-5">
+            <h1 class="display-5 fw-bold">Welcome to Book Hub</h1>
+            <p class="col-md-8 fs-4">Your one-stop place for book reviews and information.</p>
+            <p>We have a total of {{ total_books|default:0 }} books in our collection.</p>
+        </div>
+    </div>
+
+    {% if latest_book %}
+    <div class="row align-items-md-stretch">
+        <div class="col-md-12">
+            <div class="h-100 p-5 text-white bg-dark rounded-3">
+                <h2>Our Latest Addition</h2>
+
+                <h3>{{ latest_book.title|default:"(NO TITLE)"|upper }}</h3>
+
+                <p>
+                    {{ latest_book.description|default:"No description available."|lower|capfirst|truncatewords:20 }}
+                </p>
+
+                {% if latest_book.slug %}
+                    <a href="{% url 'books:details' latest_book.slug %}"
+                       class="btn btn-outline-light"
+                       type="button">
+                        View Details
+                    </a>
+                {% else %}
+                    <span class="text-warning">Details link unavailable (missing slug).</span>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+</div>
+{% endblock %}
