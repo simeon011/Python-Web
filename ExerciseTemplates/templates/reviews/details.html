@@ -25,6 +25,10 @@
             {% endif %}
 
             <a href="{% url 'books:details' review.book.slug %}" class="btn btn-secondary mt-3">Back to Book Details</a>
+            <div class="col-md-4">
+                <button><a href="{% url 'reviews:update' review.pk %}">Edit</a></button>
+                <button><a href="{% url 'reviews:delete' review.pk %}">Delete</a></button>
+            </div>
         </div>
     </div>
 </div>

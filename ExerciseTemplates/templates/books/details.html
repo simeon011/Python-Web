@@ -23,6 +23,10 @@
             {% endif %}
             <p>{{ book.description }}</p>
         </div>
+        <div class="col-md-4">
+            <button><a href="{% url 'books:edit' book.pk %}">Edit</a></button>
+            <button><a href="{% url 'books:delete' book.pk %}">Delete</a></button>
+        </div>
     </div>
 
     <hr class="my-4">

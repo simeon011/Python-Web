@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ page_title }}</title>
+</head>
+<body>
+    <main>
+        <article>
+            <h1>Destination: {{ destination.name }} - Country: {{ destination.country }} - Is active: {{ destination.is_active }}</h1>
+            <p>{{ destination.description }}</p>
+        </article>
+    </main>
+    <button><a href="{% url 'review:list' %}">View reviews</a></button>
+    <button><a href="{% url 'destination:redirect_home' %}">Go home</a></button>
+</body>
+</html>

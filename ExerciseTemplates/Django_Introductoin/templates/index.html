@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Tasks app</title>
+</head>
+<body>
+    <h1>All tasks</h1>
+    <h1>No tasks</h1>
+    {% for task in tasks %}
+        <li>{{ task.title }} - {{ task.text }}</li>
+    {% endfor %}
+</body>
+</html>

@@ -1,6 +1,7 @@
-from django.db.models import Avg
-from django.shortcuts import render, get_object_or_404
+from django.db.models import Avg, Q
+from django.shortcuts import render, get_object_or_404, redirect
 
+from books.forms import BookForm, CreateBookForm, EditBookForm, DeleteBookForm, BookSearchForm
 from books.models import Book
 
 
@@ -17,15 +18,24 @@ def landing_page(request):
     return render(request, 'books/landing.html', context)
 
 
-
 def books_list(request):
+    search_form = BookSearchForm(request.GET or None)
+
     list_books = Book.objects.annotate(
         avg_rating=Avg('reviews__rating'),
     )
 
+    if request.GET:
+        if search_form.is_valid():
+            list_books = list_books.filter(Q(title__icontains=search_form.cleaned_data['query'])
+                                           |
+                                           Q(description__icontains=search_form.cleaned_data['query']))
+
     context = {
         'books': list_books,
-        'page_title': 'Dashboard'
+        'page_title': 'Dashboard',
+        'search_form': search_form,
+
     }
 
     return render(request, 'books/list.html', context)
@@ -43,3 +53,44 @@ def details(request, slug):
     }
 
     return render(request, 'books/details.html', context)
+
+
+def book_create(request):
+    form = CreateBookForm(request.POST or None)
+    if form.is_valid():
+        form.save()
+        return redirect("books:home")
+
+    context = {
+        "form": form,
+    }
+
+    return render(request, 'books/create.html', context)
+
+
+def edit_book(request, pk: int):
+    book = Book.objects.get(pk=pk)
+    form = EditBookForm(request.POST or None, instance=book)
+    if form.is_valid():
+        form.save()
+        return redirect("books:home")
+
+    context = {
+        "form": form,
+    }
+
+    return render(request, 'books/edit.html', context)
+
+
+def delete_book(request, pk: int):
+    book = Book.objects.get(pk=pk)
+    form = DeleteBookForm(request.POST or None, instance=book)
+    if form.is_valid():
+        book.delete()
+        return redirect("books:home")
+
+    context = {
+        "form": form,
+    }
+
+    return render(request, 'books/delete.html', context)
